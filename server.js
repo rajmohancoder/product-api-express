@@ -29,6 +29,27 @@ app.get('/products', (req, res) => {
   res.json({ status: 'success', count: products.length, data: products });
 });
 
+// ✅ GET products with pagination (optional)
+
+app.get('/products/paginated', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedProducts = products.slice(startIndex, endIndex);
+
+  res.json({ 
+    status: 'success man', 
+    data: paginatedProducts,
+    pagination: {
+      page,
+      limit,
+      total: products.length,
+      pages: Math.ceil(products.length / limit)
+    }
+  });
+});
+
 // ✅ GET single product by ID
 app.get('/products/:id', (req, res) => {
   const product = products.find(p => p.id === parseInt(req.params.id));
